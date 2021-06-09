@@ -1,12 +1,26 @@
 import {URL} from 'url';
 
 export class DuplicateUrlChecker {
-  private visitedUrls: Set<String> = new Set();
+  visitedUrls: Set<String>;
+
+  constructor() {
+    this.visitedUrls = new Set();
+  }
+
+  private removeTrailingSlash({href}: URL) {
+    if (href.endsWith('/')) {
+      return href.slice(0, -1);
+    }
+    return href;
+  }
 
   public hasUrl(url: URL) {
-    return this.visitedUrls.has(url.href);
+    const formattedUrl = this.removeTrailingSlash(url);
+    return this.visitedUrls.has(formattedUrl);
   }
+
   public markVisited(url: URL) {
-    this.visitedUrls.add(url.href);
+    const formattedUrl = this.removeTrailingSlash(url);
+    this.visitedUrls.add(formattedUrl);
   }
 }

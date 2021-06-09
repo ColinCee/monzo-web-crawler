@@ -1,24 +1,20 @@
-import {DuplicateUrlChecker} from './DuplicateUrlChecker';
 import {WebCrawler} from './WebCrawler';
-import puppeteer from 'puppeteer';
+import {Cluster} from 'puppeteer-cluster';
+import {URL} from 'url';
 
-const STARTING_URL = 'https://monzo.com/i/coronavirus-update';
+const STARTING_URL = new URL('https://monzo.com/i/coronavirus-update');
 
 const main = async () => {
-  const browser = await puppeteer.launch({headless: false});
-  const duplicateUrlChecker = new DuplicateUrlChecker();
-  try {
-    const webCrawler = new WebCrawler(
-      browser,
-      duplicateUrlChecker,
-      STARTING_URL
-    );
-    await webCrawler.crawl();
-  } catch (e) {
-    console.log(e);
-  } finally {
-    await browser.close();
-  }
+  const cluster: Cluster<URL> = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_CONTEXT,
+    maxConcurrency: 4,
+  });
+
+  const crawler = new WebCrawler(cluster, STARTING_URL);
+  await crawler.crawl();
+
+  await cluster.idle();
+  await cluster.close();
 };
 
 main();
