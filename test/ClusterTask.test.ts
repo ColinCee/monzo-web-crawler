@@ -1,15 +1,14 @@
-import {mocked} from 'ts-jest/utils';
-import {isUrlValid} from './../src/isUrlValid';
+import * as isUrlValid from './../src/isUrlValid';
 import * as ClusterTask from './../src/ClusterTask';
 import {Cluster} from 'puppeteer-cluster';
 import {DuplicateUrlChecker} from './../src/DuplicateUrlChecker';
 import {URL} from 'url';
 import {mock, mockDeep} from 'jest-mock-extended';
 import {Page} from 'puppeteer';
+
 jest.mock('../src/isUrlValid');
 
 const startUrl = new URL('https://monzo.com/');
-const mockIsUrlValid = mocked(isUrlValid);
 const {shouldVisitUrl, mapAnchorsToLinks, createClusterTask} = ClusterTask;
 
 describe('shouldVisitUrl', () => {
@@ -89,7 +88,9 @@ describe('createClusterTask', () => {
       Promise.resolve(['https://test.com/', 'monzo.com'])
     );
     jest.spyOn(ClusterTask, 'shouldVisitUrl').mockReturnValue(true);
-    mockIsUrlValid.mockImplementation(url => url === 'https://test.com/');
+    jest
+      .spyOn(isUrlValid, 'isUrlValid')
+      .mockImplementation(url => url === 'https://test.com/');
 
     await clusterTask(taskArgs);
     expect(cluster.queue).toBeCalledWith(new URL('https://test.com/'));
@@ -100,7 +101,7 @@ describe('createClusterTask', () => {
     page.$$eval.mockReturnValue(
       Promise.resolve(['https://test.com/', 'https://monzo.com'])
     );
-    mockIsUrlValid.mockReturnValue(true);
+    jest.spyOn(isUrlValid, 'isUrlValid').mockReturnValue(true);
     jest.spyOn(ClusterTask, 'shouldVisitUrl').mockReturnValue(false);
 
     await clusterTask(taskArgs);

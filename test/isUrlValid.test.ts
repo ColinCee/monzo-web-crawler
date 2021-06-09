@@ -1,4 +1,4 @@
-import {isUrlValid} from './../src/isUrlValid';
+import {isUrlValid} from '../src/isUrlValid';
 
 describe('isUrlValid', () => {
   it.each([
