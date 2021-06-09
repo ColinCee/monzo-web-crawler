@@ -1,5 +1,4 @@
 import {isUrlValid} from './../src/isUrlValid';
-import {URL} from 'url';
 
 describe('isUrlValid', () => {
   it.each([
