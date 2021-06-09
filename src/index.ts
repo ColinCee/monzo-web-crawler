@@ -8,6 +8,10 @@ export const main = async () => {
   const cluster: Cluster<URL> = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_CONTEXT,
     maxConcurrency: 4,
+    puppeteerOptions: {
+      // @ts-ignore
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    },
   });
 
   const crawler = new WebCrawler(cluster, STARTING_URL);
