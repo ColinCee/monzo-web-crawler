@@ -1,12 +1,12 @@
 import {URL} from 'url';
 
 export class DuplicateUrlChecker {
-  private visitedUrls: Set<URL> = new Set();
+  private visitedUrls: Set<String> = new Set();
 
   public hasUrl(url: URL) {
-    return this.visitedUrls.has(url);
+    return this.visitedUrls.has(url.href);
   }
   public markVisited(url: URL) {
-    this.visitedUrls.add(url);
+    this.visitedUrls.add(url.href);
   }
 }

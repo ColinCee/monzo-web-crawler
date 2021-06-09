@@ -41,7 +41,7 @@ export class WebCrawler {
       elements.map(anchor => (anchor as HTMLAnchorElement).href)
     );
     await page.close();
-    console.log(urls);
+    // console.log(urls);
     return urls.filter(url => this.isUrlValid(url)).map(url => new URL(url));
   }
 
@@ -50,12 +50,14 @@ export class WebCrawler {
 
     while (queue.length > 0) {
       const currentUrl = queue.shift() as URL;
+      if (!this.shouldVisitUrl(currentUrl)) {
+        continue;
+      }
+
       console.log(currentUrl.href);
       const urls = await this.fetchUniqueUrls(currentUrl);
       for (const url of urls) {
-        if (this.shouldVisitUrl(url)) {
-          queue.push(url);
-        }
+        queue.push(url);
       }
 
       this.duplicateUrlCHecker.markVisited(currentUrl);
