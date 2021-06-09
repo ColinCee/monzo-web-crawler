@@ -1,19 +1,32 @@
+import {DuplicateUrlChecker} from './DuplicateUrlChecker';
 import {Browser} from 'puppeteer';
 import {URL} from 'url';
 
 export class WebCrawler {
   browser: Browser;
-  visitedUrls: Set<URL>;
   startUrl: URL;
+  duplicateUrlCHecker: DuplicateUrlChecker;
 
-  constructor(browser: Browser, startUrl: string) {
+  constructor(
+    browser: Browser,
+    duplicateUrlChecker: DuplicateUrlChecker,
+    startUrl: string
+  ) {
     this.browser = browser;
-    this.visitedUrls = new Set();
+    this.duplicateUrlCHecker = duplicateUrlChecker;
     this.startUrl = new URL(startUrl);
+  }
+  private isUrlValid(url: string) {
+    try {
+      new URL(url);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
   private shouldVisitUrl(url: URL) {
-    if (this.visitedUrls.has(url)) {
+    if (this.duplicateUrlCHecker.hasUrl(url)) {
       return false;
     }
 
@@ -27,9 +40,9 @@ export class WebCrawler {
     const urls = await page.$$eval('a', elements =>
       elements.map(anchor => (anchor as HTMLAnchorElement).href)
     );
-    console.log(urls);
     await page.close();
-    return urls.map(url => new URL(url));
+    console.log(urls);
+    return urls.filter(url => this.isUrlValid(url)).map(url => new URL(url));
   }
 
   public async crawl() {
@@ -45,7 +58,7 @@ export class WebCrawler {
         }
       }
 
-      this.visitedUrls.add(currentUrl);
+      this.duplicateUrlCHecker.markVisited(currentUrl);
     }
   }
 }
