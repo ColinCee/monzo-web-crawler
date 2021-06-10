@@ -75,12 +75,18 @@ describe('createClusterTask', () => {
     await clusterTask(taskArgs);
 
     expect(page.$$eval).toBeCalledWith('a', mapAnchorsToLinks);
-  });
-
-  it('closes page when done', async () => {
-    await clusterTask(taskArgs);
-
     expect(page.close).toBeCalled();
+  });
+  it('should ignore duplicates', async () => {
+    page.$$eval.mockReturnValue(
+      Promise.resolve(['https://test.com/', 'https://test.com/'])
+    );
+    jest.spyOn(ClusterTask, 'shouldVisitUrl').mockReturnValue(true);
+    jest.spyOn(isUrlValid, 'isUrlValid').mockReturnValue(true);
+
+    await clusterTask(taskArgs);
+    expect(cluster.queue).toBeCalledWith(new URL('https://test.com/'));
+    expect(cluster.queue).toBeCalledTimes(1);
   });
 
   it('should filter non valid urls', async () => {

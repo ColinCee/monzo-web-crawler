@@ -21,6 +21,9 @@ describe('main', () => {
     expect(mockCluster.launch).toBeCalledWith({
       concurrency: Cluster.CONCURRENCY_CONTEXT,
       maxConcurrency: 4,
+      puppeteerOptions: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      },
     });
     expect(WebCrawler).toBeCalledWith(cluster, STARTING_URL);
     expect(mockedCrawler.mock.instances[0].crawl).toBeCalled();

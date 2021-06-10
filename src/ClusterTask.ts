@@ -24,8 +24,7 @@ export const createClusterTask = (
   cluster: Cluster
 ): TaskFunction<URL, void> => {
   const addNextLinks = (urls: string[]) => {
-    const uniqueUrls = [...new Set(urls)];
-    uniqueUrls
+    urls
       .filter(url => isUrlValid(url))
       .map(url => new URL(url))
       .filter(url => shouldVisitUrl(duplicateUrlChecker, startUrl, url))
@@ -44,7 +43,8 @@ export const createClusterTask = (
     const urls = await page.$$eval('a', mapAnchorsToLinks);
 
     await page.close();
-    // console.log(urls);
-    addNextLinks(urls);
+    const uniqueUrls = [...new Set(urls)];
+    console.log(uniqueUrls);
+    addNextLinks(uniqueUrls);
   };
 };
