@@ -63,14 +63,6 @@ describe('createClusterTask', () => {
     expect(page.goto).not.toBeCalled();
   });
 
-  it('goes to page and prints', async () => {
-    const log = jest.spyOn(global.console, 'log');
-    await clusterTask(taskArgs);
-
-    expect(page.goto).toBeCalledWith(data.href);
-    expect(log).toBeCalledWith(data.href);
-  });
-
   it('looks for anchor links and returns their hrefs', async () => {
     await clusterTask(taskArgs);
 
