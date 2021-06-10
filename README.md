@@ -43,7 +43,11 @@ Install [Node](https://nodejs.org/en/) or using [NVM](https://github.com/nvm-sh/
    ```sh
    npm install
    ```
-2. Run the code
+2. Compile
+   ```sh
+   npm run compile
+   ```
+3. Run the code
    ```sh
    npm start
    ```
