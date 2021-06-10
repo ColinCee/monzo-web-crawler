@@ -37,14 +37,13 @@ export const createClusterTask = (
     }
 
     duplicateUrlChecker.markVisited(data);
-    console.log(data.href);
     await page.goto(data.href);
 
     const urls = await page.$$eval('a', mapAnchorsToLinks);
 
     await page.close();
     const uniqueUrls = [...new Set(urls)];
-    console.log(uniqueUrls);
+    console.log(data.href, uniqueUrls);
     addNextLinks(uniqueUrls);
   };
 };

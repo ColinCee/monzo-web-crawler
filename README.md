@@ -15,8 +15,8 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-Docker is the recommend way to run the program as it requires the least setup
-Install from the [docker website](https://www.docker.com/products/docker-desktop)
+Docker is the recommend way to run the program as it requires the least setup.
+Install it from the [docker website](https://www.docker.com/products/docker-desktop)
 
 ### Installation
 
@@ -47,3 +47,11 @@ Install [Node](https://nodejs.org/en/) or using [NVM](https://github.com/nvm-sh/
    ```sh
    npm start
    ```
+
+### Tests
+
+Run tests with the following command
+
+```sh
+npm test
+```
